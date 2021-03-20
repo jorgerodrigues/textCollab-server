@@ -5,16 +5,10 @@ const port = process.env.PORT || 3000;
 
 io.on('connection', (socket) => {
   socket.on('messageUpdated', (msg) => {
-    const currentText = msg.msg;
-    console.log(msg.user, ': ', msg.msg);
-    setTimeout(() => {
-      console.log('Emitting, ', msg);
-      io.emit('textUpdated', msg);
-    }, port);
-    // io.emit('textUpdated', currentText);
+    io.emit('textUpdated', msg);
   });
 });
 
 http.listen(port, () => {
-  console.log('listening on *:3000');
+  console.log('listening on *: ', port);
 });
