@@ -1,10 +1,7 @@
 const app = require('express')();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
-
-app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>');
-});
+const port = process.env.PORT || 3000;
 
 io.on('connection', (socket) => {
   socket.on('messageUpdated', (msg) => {
@@ -13,11 +10,11 @@ io.on('connection', (socket) => {
     setTimeout(() => {
       console.log('Emitting, ', msg);
       io.emit('textUpdated', msg);
-    }, 3000);
+    }, port);
     // io.emit('textUpdated', currentText);
   });
 });
 
-http.listen(3000, () => {
+http.listen(port, () => {
   console.log('listening on *:3000');
 });
