@@ -5,19 +5,24 @@ const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const port = process.env.PORT || 3000;
 
-var usersAndPositions = [{ name: '', position: 1 }];
+var usersAndPositions = [];
+const checkForUserAndPosition = (msg) => {
+  const index = usersAndPositions.findIndex((obj) => {
+    return obj.name === msg.user;
+  });
+  console.log(index);
+  if (index != -1) {
+    usersAndPositions[index].position = msg.cursorPosition;
+  } else {
+    console.log('Pushing');
+    usersAndPositions.push({ name: msg.user, position: msg.cursorPosition });
+  }
+  console.log(usersAndPositions);
+};
 
 io.on('connection', (socket) => {
   socket.on('messageUpdated', (msg) => {
-    const index = usersAndPositions.findIndex((obj) => {
-      obj.name = msg.name;
-    });
-    if (index) {
-      usersAndPositions[index].position = msg.position;
-    } else {
-      usersAndPositions.push({ name: msg.name, position: msg.position });
-    }
-    console.log(usersAndPositions);
+    checkForUserAndPosition(msg);
     io.emit('textUpdated', msg);
   });
 });
