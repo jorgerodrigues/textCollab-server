@@ -23,7 +23,7 @@ const checkForUserAndPosition = (msg) => {
 io.on('connection', (socket) => {
   socket.on('messageUpdated', (msg) => {
     checkForUserAndPosition(msg);
-    io.emit('textUpdated', msg);
+    io.emit('textUpdated', msg, usersAndPositions);
   });
 });
 
